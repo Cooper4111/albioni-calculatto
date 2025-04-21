@@ -11,29 +11,72 @@
   </style>
 </head>
 <body>
-  <h1>BMI Calculator</h1>
-  <label for="weight">Weight (kg):</label>
-  <input type="number" id="weight" step="0.1" />
+  <h1>Penetra Calculator</h1>
 
-  <label for="height">Height (cm):</label>
-  <input type="number" id="height" step="0.1" />
+  <label for="damage">Your incoming damage:</label>
+  <input type="number" id="damage" step="1" value="1000"/>
 
-  <button onclick="calculateBMI()">Calculate BMI</button>
+  <label for="attNum">Attakers (including you):</label>
+  <input type="number" id="attNum" step="1" value="1"/>
+
+  <label for="penetra">Your penetration (%):</label>
+  <input type="number" id="penetra" step="5" value="0"/>
+
+  <button onclick="calculatePenetration()">Calculate BMI</button>
 
   <div class="result" id="result"></div>
+  <div class="result2" id="result2"></div>
 
   <script>
-    function calculateBMI() {
-      const weight = parseFloat(document.getElementById('weight').value);
-      const height = parseFloat(document.getElementById('height').value) / 100; // convert cm to meters
 
-      if (!weight || !height || height <= 0) {
-        document.getElementById('result').textContent = 'Please enter valid numbers.';
-        return;
-      }
+    const resTable = [
+    0,
+    14.3,
+    25.9,
+    35.3,
+    43.0,
+    48.6,
+    53.0,
+    56.6,
+    59.6,
+    62.2,
+    64.5,
+    66.5,
+    68.3,
+    69.9,
+    71.3,
+    72.6,
+    73.8,
+    74.9,
+    75.9,
+    76.8,
+    77.6,
+    78.4,
+    79.1,
+    79.7,
+    80.0,
+    80.0,
+    80.0,
+    80.0,
+    80.0,
+    80.0,
+    ].map( e => e / 100);
 
-      const bmi = weight / (height * height);
-      document.getElementById('result').textContent = `Your BMI is ${bmi.toFixed(2)}`;
+console.log(resTable);
+
+    function calculatePenetration() {
+
+        const damage  = parseFloat(document.getElementById('damage').value);
+        const attNum  = parseFloat(document.getElementById('attNum').value);
+        const penetra = parseFloat(document.getElementById('penetra').value);
+
+        const resDmg   = (1 - resTable[attNum - 1]) * damage;
+        const penDmg   = (1 - resTable[attNum - 1] * (1 - (penetra / 100))) * damage;
+        const dmgDelta = penDmg - resDmg;
+        const dmgDeltaPercent = (100 * dmgDelta / resDmg).toFixed(1);
+
+        document.getElementById('result').textContent  = `Your damage is ${resDmg.toFixed(2)}`;
+        document.getElementById('result2').textContent = `Penetra increases ur dmg for ${dmgDelta.toFixed(2)} i.e. ${dmgDeltaPercent}%`;
     }
   </script>
 </body>
